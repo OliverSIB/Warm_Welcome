@@ -37,6 +37,79 @@ st.write("You will only need to have an EPC if you construct (including certain 
 
 
 
+
+
+
+
+# Sidebar with search functionality --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Checkbox for filtering or displaying the entire dataset
+st.sidebar.header('Search the data')
+
+# Checkbox for filtering or displaying the entire dataset
+st_filter_option = st.sidebar.checkbox('Filter Space Type Data')
+
+if st_filter_option:
+    # Selectbox for Space Type
+    Space_Type = st.sidebar.selectbox('Type or select Space Type', wwdf['Space Type'].unique())
+
+    # Filter DataFrame based on selected Space Type
+    filtered_df = wwdf[wwdf['Space Type'] == Space_Type]
+    
+    if filtered_df.empty:
+        st.sidebar.error(f"Whoops: '{Space_Type}' doesn't exist in the dataset.")
+else:
+    # If not filtering, display the entire dataset
+    filtered_df = wwdf
+
+
+# Checkbox for filtering or displaying the urban_rural
+ru_filter_option = st.sidebar.checkbox('Filter Rural Urban Data')
+
+if ru_filter_option:
+    # Selectbox for urban_rural
+    urban_rural = st.sidebar.selectbox('Type or select Rural/Urban Classification', wwdf['urban_rural'].unique())
+
+    # Filter DataFrame based on selected urban_rural
+    filtered_df2 = wwdf[wwdf['urban_rural'] == urban_rural]
+    
+    if filtered_df2.empty:
+        st.sidebar.error(f"Whoops: '{urban_rural}' doesn't exist in the dataset.")
+else:
+    # If not filtering, display the entire dataset
+    filtered_df2 = filtered_df
+
+
+
+
+# Checkbox for filtering or displaying the urban_rural
+imd_filter_option = st.sidebar.checkbox('Filter IMD Data')
+
+if imd_filter_option:
+    # Selectbox for urban_rural
+    IMD = st.sidebar.selectbox('Type or select IMD', wwdf['IMD2019 Decile'].unique())
+
+    # Filter DataFrame based on selected urban_rural
+    filtered_df3 = wwdf[wwdf['IMD2019 Decile'] == IMD
+]
+    
+    if filtered_df3.empty:
+        st.sidebar.error(f"Whoops: '{IMD}' doesn't exist in the dataset.")
+else:
+    # If not filtering, display the entire dataset
+    filtered_df3 = filtered_df2
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 # add an image to break up the page
 st.image('Warm_Welcome_Image.jpg')
 
@@ -45,11 +118,11 @@ st.header("Lets explore the data")
 col1, col2, col3 = st.columns((3))
 # count of certs
 with col1:
-    num_ww = wwdf['ID'].nunique()
+    num_ww = filtered_df3['ID'].nunique()
     st.write("Number of Warm Welcome Buildings", num_ww)
-    both = wwdf[wwdf['Both?'] == 'Y'].shape[0]
+    both = filtered_df3[filtered_df3['Both?'] == 'Y'].shape[0]
     st.write("Number of Warm Welcome Buildings with Both EPC and DEC", both)
-    neither = wwdf[wwdf['Has A Cert?'] == 'N'].shape[0]
+    neither = filtered_df3[filtered_df3['Has A Cert?'] == 'N'].shape[0]
     st.write("Number of Warm Welcome Buildings with neither EPC or DEC", neither)
 with col2:
     num_epc = epcdf['ID'].nunique()
